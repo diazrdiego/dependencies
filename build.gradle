@@ -22,11 +22,38 @@ ext.cargoGroup = 'org.codehaus.cargo'
 ext.cargoVersion = '1.3.1'
 
 dependencies {
-    cargo group: cargoGroup, name: 'cargo-core-uberjar', version: cargoVersion
-    cargo "$cargoGroup:cargo-ant:$cargoVersion"
+
+    //cargo "$cargoGroup:cargo-core-uberjar:1.4.5"
+
+    cargo ("$cargoGroup:cargo-ant:1.5.+") //{
+        // exclude group: 'xml-apis', module: 'xml-apis'
+        // transitive = false
+    //}
+
+    //cargo fileTree(dir: "${System.properties['user.home']}/tmp", include: "*.jar")
+
+    //cargo "xml-apis:xml-apis:2.0.2"
 }
 
 repositories {
-    mavenCentral()
+    //mavenCentral()
+    maven {
+        name "customMaven"
+        url "http://central.maven.org/maven2"
+    }
 }
 
+task printDependencies {
+    doLast {
+        configurations.cargo.each { dependency ->
+            println dependency
+        }
+    }
+}
+
+/*
+task copyCargoDependencies(type: Copy) {
+    from configurations.cargo.asFileTree
+    into "${System.properties['user.home']}/tmp"
+}
+*/
